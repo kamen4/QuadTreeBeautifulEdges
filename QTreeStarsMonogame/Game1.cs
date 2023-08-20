@@ -10,45 +10,8 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace QTreeStarsMonogame;
 
-public static class Help
-{
-    private static Texture2D _texture;
-    private static Texture2D GetTexture(SpriteBatch spriteBatch)
-    {
-        if (_texture == null)
-        {
-            _texture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            _texture.SetData(new[] { Color.White });
-        }
-
-        return _texture;
-    }
-
-    public static void DrawLine(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness = 1f)
-    {
-        var distance = Vector2.Distance(point1, point2);
-        var angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
-        DrawLine(spriteBatch, point1, distance, angle, color, thickness);
-    }
-
-    public static void DrawLine(this SpriteBatch spriteBatch, Vector2 point, float length, float angle, Color color, float thickness = 1f)
-    {
-        var origin = new Vector2(0f, 0.5f);
-        var scale = new Vector2(length, thickness);
-        spriteBatch.Draw(GetTexture(spriteBatch), point, null, color, angle, origin, scale, SpriteEffects.None, 0);
-    }
-}
 public class Game1 : Game
 {
-    //COMMON VARIBLES
-    private readonly GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private QuadTree _quadTree;
-    Texture2D tex;
-    List<Vector2D> points;
-    List<Vector2D> dirs;
-    List<(Vector2, Vector2)> lines;
-    
     //CONSTANTS
     //size of windows
     readonly Vector2D screenSize = new(800d, 800d);
@@ -64,7 +27,16 @@ public class Game1 : Game
     const float scale = 0.005f;
     //prev two vars beacome rScaled by "rScaled = r * scale / 2f"
     float rScaled;
-    
+
+    //COMMON VARIBLES
+    private readonly GraphicsDeviceManager _graphics;
+    private SpriteBatch _spriteBatch;
+    private QuadTree _quadTree;
+    Texture2D tex;
+    List<Vector2D> points;
+    List<Vector2D> dirs;
+    List<(Vector2, Vector2)> lines;
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -148,5 +120,34 @@ public class Game1 : Game
             _spriteBatch.Draw(tex, new Vector2((float)p.X - rScaled, (float)p.Y - rScaled), null, Color.White, 0f, new(), scale, SpriteEffects.None, 1f);
         _spriteBatch.End();
         base.Draw(gameTime);
+    }
+}
+
+public static class Help
+{
+    private static Texture2D _texture;
+    private static Texture2D GetTexture(SpriteBatch spriteBatch)
+    {
+        if (_texture == null)
+        {
+            _texture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            _texture.SetData(new[] { Color.White });
+        }
+
+        return _texture;
+    }
+
+    public static void DrawLine(this SpriteBatch spriteBatch, Vector2 point1, Vector2 point2, Color color, float thickness = 1f)
+    {
+        var distance = Vector2.Distance(point1, point2);
+        var angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+        DrawLine(spriteBatch, point1, distance, angle, color, thickness);
+    }
+
+    public static void DrawLine(this SpriteBatch spriteBatch, Vector2 point, float length, float angle, Color color, float thickness = 1f)
+    {
+        var origin = new Vector2(0f, 0.5f);
+        var scale = new Vector2(length, thickness);
+        spriteBatch.Draw(GetTexture(spriteBatch), point, null, color, angle, origin, scale, SpriteEffects.None, 0);
     }
 }
